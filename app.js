@@ -48,20 +48,14 @@ const kana = [
 ].map(([char, romaji, korean, row, hint]) => ({ char, romaji, korean, row, hint }));
 
 const storageKey = "kanamem-progress-v1";
-const correctMessages = [
-  "맞았어요. 흐름 좋아요.",
-  "정답이에요. 바로 이어가요.",
-  "좋아요. 이 글자는 감이 잡혔어요.",
-  "맞았어요. 눈에 익고 있어요.",
-  "정확해요. 다음 글자로 가볼게요.",
-  "좋습니다. 헷갈림이 줄고 있어요."
-];
-
 const state = {
   mode: "chart",
+  quizType: "cards",
   quiz: [],
   quizIndex: 0,
   answered: false,
+  recentQuestions: [],
+  renderedQuestionIndex: -1,
   progress: loadProgress()
 };
 
@@ -71,13 +65,10 @@ const els = {
     quiz: document.querySelector("#quiz-panel"),
     chart: document.querySelector("#chart-panel")
   },
-  resetProgress: document.querySelector("#reset-progress"),
-  quizCount: document.querySelector("#quiz-count"),
+  quizTypeButtons: document.querySelectorAll("[data-quiz-type]"),
   quizKana: document.querySelector("#quiz-kana"),
   quizPrompt: document.querySelector("#quiz-prompt"),
   answerGrid: document.querySelector("#answer-grid"),
-  quizFeedback: document.querySelector("#quiz-feedback"),
-  newQuiz: document.querySelector("#new-quiz"),
   reviewWeak: document.querySelector("#review-weak"),
   chart: document.querySelector("#kana-chart"),
   masteredPercent: document.querySelector("#mastered-percent"),
@@ -123,35 +114,35 @@ function weightedKana() {
   });
 
   const unseen = kana.filter((item) => !state.progress[item.char]);
-  const pool = [...weak, ...weak, ...unseen, ...kana];
-  return shuffle(pool).slice(0, 10);
+  return [...weak, ...weak, ...unseen, ...kana];
 }
 
 function startQuiz(list = weightedKana()) {
-  state.quiz = list.length ? list : shuffle(kana).slice(0, 10);
+  state.quiz = makeQuizSequence(list.length ? list : kana);
   state.quizIndex = 0;
   state.answered = false;
-  els.quizFeedback.textContent = "";
+  state.renderedQuestionIndex = -1;
   renderQuiz();
 }
 
 function renderQuiz() {
   const item = state.quiz[state.quizIndex];
-  const askKana = Math.random() > 0.35;
-  const options = makeOptions(item, askKana ? "romaji" : "char");
+  rememberRenderedQuestion(item);
+  const useTable = state.quizType === "table";
+  const askKana = useTable ? false : Math.random() > 0.35;
+  const options = useTable ? kana : makeOptions(item, askKana ? "romaji" : "char");
 
-  els.quizCount.textContent = String(state.quizIndex + 1);
   els.quizPrompt.textContent = askKana ? "이 글자의 발음은?" : "이 발음의 히라가나는?";
-  els.quizKana.textContent = askKana ? item.char : item.romaji;
+  els.quizKana.textContent = askKana ? item.char : `${item.romaji} · ${item.korean}`;
+  els.answerGrid.classList.toggle("full-chart", useTable);
   els.answerGrid.innerHTML = "";
-  els.quizFeedback.textContent = "";
   state.answered = false;
 
   options.forEach((option) => {
     const button = document.createElement("button");
-    button.className = "answer-button";
+    button.className = useTable ? "answer-button chart-choice" : "answer-button";
     button.type = "button";
-    button.textContent = askKana ? `${option.romaji} · ${option.korean}` : option.char;
+    button.textContent = askKana ? formatReading(option) : option.char;
     button.dataset.answer = option.char;
     button.addEventListener("click", () => answerQuiz(button, option.char === item.char));
     els.answerGrid.append(button);
@@ -170,7 +161,6 @@ function answerQuiz(button, isCorrect) {
     entry.correct += 1;
     entry.mastered = entry.correct >= 3 && entry.correct > entry.wrong;
     button.classList.add("correct");
-    els.quizFeedback.textContent = randomMessage(correctMessages);
   } else {
     entry.wrong += 1;
     entry.mastered = false;
@@ -178,7 +168,6 @@ function answerQuiz(button, isCorrect) {
     els.answerGrid
       .querySelector(`[data-answer="${CSS.escape(item.char)}"]`)
       ?.classList.add("correct");
-    els.quizFeedback.textContent = `${item.char}는 ${item.romaji} · ${item.korean}예요.`;
   }
 
   saveProgress();
@@ -208,6 +197,37 @@ function makeOptions(answer, key) {
   return shuffle(options);
 }
 
+function formatReading(item) {
+  return `${item.romaji} · ${item.korean}`;
+}
+
+function makeQuizSequence(source, count = 10) {
+  const sequence = [];
+  const tempRecent = [...state.recentQuestions];
+  const pool = source.length ? source : kana;
+
+  while (sequence.length < count) {
+    const candidates = pool.filter((item) => !tempRecent.includes(item.char));
+    const fallback = kana.filter((item) => !tempRecent.includes(item.char));
+    const available = candidates.length ? candidates : fallback.length ? fallback : kana;
+    const selected = shuffle(available)[0];
+
+    sequence.push(selected);
+    tempRecent.unshift(selected.char);
+    tempRecent.length = Math.min(tempRecent.length, 2);
+  }
+
+  return sequence;
+}
+
+function rememberRenderedQuestion(item) {
+  if (state.renderedQuestionIndex === state.quizIndex) return;
+
+  state.renderedQuestionIndex = state.quizIndex;
+  state.recentQuestions.unshift(item.char);
+  state.recentQuestions.length = Math.min(state.recentQuestions.length, 2);
+}
+
 function renderChart() {
   els.chart.innerHTML = "";
 
@@ -220,7 +240,11 @@ function renderChart() {
     if (entry && entry.wrong > entry.correct) tile.classList.add("weak");
     tile.setAttribute("aria-pressed", entry?.mastered ? "true" : "false");
     tile.setAttribute("aria-label", `${item.char} ${item.romaji} ${entry?.mastered ? "알고 있음" : "아직 표시 안 함"}`);
-    tile.innerHTML = `<strong>${item.char}</strong><span>${item.romaji}</span>`;
+    tile.innerHTML = `
+      <strong>${item.char}</strong>
+      <span>${item.romaji}</span>
+      <em>${statusText(entry)}</em>
+    `;
     tile.addEventListener("click", () => {
       toggleMastered(item.char);
     });
@@ -259,16 +283,26 @@ function renderStats() {
   if (state.mode === "chart") renderChart();
 }
 
+function statusText(entry) {
+  if (!entry) return "";
+  if (entry.mastered) return "알고 있음";
+  if (entry.wrong > entry.correct) return "복습 필요";
+  return "";
+}
+
 function shuffle(items) {
   return [...items].sort(() => Math.random() - 0.5);
 }
 
-function randomMessage(messages) {
-  return messages[Math.floor(Math.random() * messages.length)];
-}
 
 els.tabs.forEach((tab) => tab.addEventListener("click", () => setMode(tab.dataset.mode)));
-els.newQuiz.addEventListener("click", () => startQuiz());
+els.quizTypeButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    state.quizType = button.dataset.quizType;
+    els.quizTypeButtons.forEach((item) => item.classList.toggle("active", item === button));
+    startQuiz();
+  });
+});
 els.reviewWeak.addEventListener("click", () => {
   const weak = kana.filter((item) => {
     const entry = state.progress[item.char];
@@ -277,12 +311,5 @@ els.reviewWeak.addEventListener("click", () => {
   startQuiz(weak.length ? weak : kana.slice(0, 10));
   setMode("quiz");
 });
-els.resetProgress.addEventListener("click", () => {
-  if (!confirm("저장된 진도를 지울까요?")) return;
-  state.progress = {};
-  saveProgress();
-  renderStats();
-});
-
 renderChart();
 renderStats();
