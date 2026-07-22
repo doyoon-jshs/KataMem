@@ -254,7 +254,7 @@ function answerQuiz(button, isCorrect) {
 
     state.quizIndex += 1;
     renderQuiz();
-  }, isCorrect ? 650 : 1100);
+  }, isCorrect ? 650 : 1700);
 }
 
 function makeOptions(answer, key) {
