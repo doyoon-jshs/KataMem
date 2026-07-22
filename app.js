@@ -100,6 +100,7 @@ const kanaSets = {
   hiragana: { title: "ひらがな", items: hiragana },
   katakana: { title: "カタカナ", items: katakana }
 };
+const scriptOrder = ["hiragana", "katakana"];
 
 const storageKey = "kanamem-progress-v1";
 const state = {
@@ -115,8 +116,11 @@ const state = {
 };
 
 const els = {
-  title: document.querySelector("#app-title span"),
-  scriptButtons: document.querySelectorAll("[data-script]"),
+  titleControl: document.querySelector("#app-title"),
+  titleTrack: document.querySelector("#title-track"),
+  titleCurrent: document.querySelector("#title-current"),
+  titleNext: document.querySelector("#title-next"),
+  titleNavButtons: document.querySelectorAll("[data-script-step]"),
   tabs: document.querySelectorAll(".tab"),
   panels: {
     quiz: document.querySelector("#quiz-panel"),
@@ -368,22 +372,85 @@ function currentProgress() {
   return state.progress[state.script];
 }
 
-function setScript(script) {
+const titleAnimationMs = 320;
+let titleAnimating = false;
+
+function updateTitle(script, direction = 0) {
+  const nextTitle = kanaSets[script].title;
+
+  if (!direction) {
+    els.titleControl.classList.remove("slide-forward", "slide-back");
+    els.titleCurrent.textContent = nextTitle;
+    els.titleNext.textContent = nextTitle;
+    return;
+  }
+
+  titleAnimating = true;
+  els.titleNext.textContent = nextTitle;
+  els.titleControl.classList.remove("slide-forward", "slide-back");
+  void els.titleControl.offsetWidth;
+  els.titleControl.classList.add(direction > 0 ? "slide-forward" : "slide-back");
+
+  window.setTimeout(() => {
+    els.titleCurrent.textContent = nextTitle;
+    els.titleControl.classList.remove("slide-forward", "slide-back");
+    titleAnimating = false;
+  }, titleAnimationMs);
+}
+
+function setScript(script, direction = 0) {
   state.script = script;
   state.quiz = [];
   state.quizIndex = 0;
   state.recentQuestions = [];
   state.renderedQuestionIndex = -1;
-  els.title.textContent = kanaSets[script].title;
-  els.scriptButtons.forEach((button) => button.classList.toggle("active", button.dataset.script === script));
+  updateTitle(script, direction);
+  els.titleControl.setAttribute("aria-label", `${kanaSets[script].title}. 좌우로 밀거나 버튼으로 문자 변경`);
+  document.title = `${kanaSets[script].title} - KanaMem`;
 
   if (state.mode === "quiz") startQuiz();
   renderStats();
 }
 
-els.scriptButtons.forEach((button) => {
-  button.addEventListener("click", () => setScript(button.dataset.script));
+function changeScript(step) {
+  if (titleAnimating) return;
+
+  const currentIndex = scriptOrder.indexOf(state.script);
+  const nextIndex = (currentIndex + step + scriptOrder.length) % scriptOrder.length;
+  setScript(scriptOrder[nextIndex], step);
+}
+
+let titleDragStart = null;
+
+els.titleControl.addEventListener("pointerdown", (event) => {
+  titleDragStart = event.clientX;
 });
+
+els.titleControl.addEventListener("pointerup", (event) => {
+  if (titleDragStart === null) return;
+
+  const delta = event.clientX - titleDragStart;
+  titleDragStart = null;
+  if (Math.abs(delta) < 36) return;
+
+  changeScript(delta < 0 ? 1 : -1);
+});
+
+els.titleControl.addEventListener("pointercancel", () => {
+  titleDragStart = null;
+});
+
+els.titleControl.addEventListener("keydown", (event) => {
+  if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+
+  event.preventDefault();
+  changeScript(event.key === "ArrowRight" ? 1 : -1);
+});
+
+els.titleNavButtons.forEach((button) => {
+  button.addEventListener("click", () => changeScript(Number(button.dataset.scriptStep)));
+});
+
 els.tabs.forEach((tab) => tab.addEventListener("click", () => setMode(tab.dataset.mode)));
 els.quizTypeButtons.forEach((button) => {
   button.addEventListener("click", () => {

@@ -20,7 +20,7 @@
       rel="stylesheet"
     />
     <link rel="icon" href="./assets/kana-icon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="./styles.css?v=20260722-ios-color" />
+    <link rel="stylesheet" href="./styles.css?v=20260723-title-nav" />
   </head>
   <body>
     <main class="app-shell">
@@ -28,18 +28,18 @@
         <header class="topbar">
           <div>
             <p class="eyebrow">KanaMem</p>
-            <h1 id="app-title">
-              <span>ひらがな</span>
-            </h1>
+            <div class="title-slider">
+              <button class="title-nav prev" type="button" data-script-step="-1" aria-label="이전 문자"></button>
+              <h1 id="app-title" tabindex="0" aria-label="좌우로 밀거나 버튼으로 문자 변경" title="좌우로 밀어 문자 변경">
+                <span class="title-track" id="title-track">
+                  <span class="title-current" id="title-current">ひらがな</span>
+                  <span class="title-next" id="title-next" aria-hidden="true">カタカナ</span>
+                </span>
+              </h1>
+              <button class="title-nav next" type="button" data-script-step="1" aria-label="다음 문자"></button>
+            </div>
           </div>
         </header>
-
-        <div class="script-area">
-          <div class="script-switch" aria-label="문자 종류">
-            <button class="script-button active" type="button" data-script="hiragana">히라가나</button>
-            <button class="script-button" type="button" data-script="katakana">가타카나</button>
-          </div>
-        </div>
 
         <nav class="mode-tabs" aria-label="학습 모드">
           <button class="tab active" type="button" data-mode="chart">표</button>
@@ -90,6 +90,6 @@
       </section>
     </main>
 
-    <script src="./app.js?v=20260722-ios-color"></script>
+    <script src="./app.js?v=20260723-title-nav"></script>
   </body>
 </html>
