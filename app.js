@@ -48,6 +48,15 @@ const kana = [
 ].map(([char, romaji, korean, row, hint]) => ({ char, romaji, korean, row, hint }));
 
 const storageKey = "kanamem-progress-v1";
+const correctMessages = [
+  "맞았어요. 흐름 좋아요.",
+  "정답이에요. 바로 이어가요.",
+  "좋아요. 이 글자는 감이 잡혔어요.",
+  "맞았어요. 눈에 익고 있어요.",
+  "정확해요. 다음 글자로 가볼게요.",
+  "좋습니다. 헷갈림이 줄고 있어요."
+];
+
 const state = {
   mode: "chart",
   quiz: [],
@@ -161,7 +170,7 @@ function answerQuiz(button, isCorrect) {
     entry.correct += 1;
     entry.mastered = entry.correct >= 3 && entry.correct > entry.wrong;
     button.classList.add("correct");
-    els.quizFeedback.textContent = "맞았어요. 이 감각으로 계속 가면 돼요.";
+    els.quizFeedback.textContent = randomMessage(correctMessages);
   } else {
     entry.wrong += 1;
     entry.mastered = false;
@@ -252,6 +261,10 @@ function renderStats() {
 
 function shuffle(items) {
   return [...items].sort(() => Math.random() - 0.5);
+}
+
+function randomMessage(messages) {
+  return messages[Math.floor(Math.random() * messages.length)];
 }
 
 els.tabs.forEach((tab) => tab.addEventListener("click", () => setMode(tab.dataset.mode)));
