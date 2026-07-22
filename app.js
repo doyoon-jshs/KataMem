@@ -67,7 +67,6 @@ const els = {
   },
   quizTypeButtons: document.querySelectorAll("[data-quiz-type]"),
   quizKana: document.querySelector("#quiz-kana"),
-  quizPrompt: document.querySelector("#quiz-prompt"),
   answerGrid: document.querySelector("#answer-grid"),
   reviewWeak: document.querySelector("#review-weak"),
   chart: document.querySelector("#kana-chart"),
@@ -132,7 +131,6 @@ function renderQuiz() {
   const askKana = useTable ? false : Math.random() > 0.35;
   const options = useTable ? kana : makeOptions(item, askKana ? "romaji" : "char");
 
-  els.quizPrompt.textContent = askKana ? "이 글자의 발음은?" : "이 발음의 히라가나는?";
   els.quizKana.textContent = askKana ? item.char : `${item.romaji} · ${item.korean}`;
   els.answerGrid.classList.toggle("full-chart", useTable);
   els.answerGrid.innerHTML = "";

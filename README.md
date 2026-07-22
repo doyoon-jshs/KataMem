@@ -4,7 +4,7 @@
 
 ## 링크
 
-[https://doyoon-jshs.github.io/KataMem/](https://doyoon-jshs.github.io/KataMem/)
+[https://doyoon-jshs.github.io/KanaMem/](https://doyoon-jshs.github.io/KanaMem/)
 
 ## 기능
 
