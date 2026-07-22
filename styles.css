@@ -29,8 +29,20 @@ body {
 }
 
 button {
+  appearance: none;
+  -webkit-appearance: none;
   font: inherit;
   color: var(--ink);
+  -webkit-text-fill-color: currentColor;
+  -webkit-tap-highlight-color: transparent;
+}
+
+button *,
+.kana-symbol,
+.answer-button,
+.answer-button *,
+.kana-tile,
+.kana-tile * {
   -webkit-text-fill-color: currentColor;
 }
 
@@ -169,8 +181,8 @@ h2 {
 
 .kana-symbol {
   font-family: "Noto Sans JP", sans-serif;
-  color: var(--ink);
-  -webkit-text-fill-color: var(--ink);
+  color: var(--ink) !important;
+  -webkit-text-fill-color: var(--ink) !important;
   font-size: clamp(7rem, 20vw, 15rem);
   line-height: 0.95;
   font-weight: 800;
@@ -284,8 +296,8 @@ h2 {
   min-height: 54px;
   background: #fff;
   border-color: var(--line);
-  color: var(--ink);
-  -webkit-text-fill-color: var(--ink);
+  color: var(--ink) !important;
+  -webkit-text-fill-color: var(--ink) !important;
   font-family: "Noto Sans KR", "Noto Sans JP", ui-sans-serif, system-ui, sans-serif;
   font-size: 1rem;
   font-weight: 900;
@@ -324,8 +336,8 @@ h2 {
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #fff;
-  color: var(--ink);
-  -webkit-text-fill-color: var(--ink);
+  color: var(--ink) !important;
+  -webkit-text-fill-color: var(--ink) !important;
   display: grid;
   place-items: center;
   gap: 0;
@@ -345,14 +357,15 @@ h2 {
 
 .kana-tile strong {
   font-family: "Noto Sans JP", sans-serif;
-  color: var(--ink);
-  -webkit-text-fill-color: var(--ink);
+  color: var(--ink) !important;
+  -webkit-text-fill-color: var(--ink) !important;
   font-size: 1.85rem;
   line-height: 1;
 }
 
 .kana-tile span {
-  color: var(--muted);
+  color: var(--ink) !important;
+  -webkit-text-fill-color: var(--ink) !important;
   font-size: 0.82rem;
   font-weight: 800;
 }
