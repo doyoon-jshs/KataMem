@@ -2,6 +2,10 @@
 
 히라가나를 표와 퀴즈로 가볍게 외우는 웹앱입니다.
 
+## 링크
+
+[https://doyoon-jshs.github.io/KataMem/](https://doyoon-jshs.github.io/KataMem/)
+
 ## 기능
 
 - 히라가나 46자 표

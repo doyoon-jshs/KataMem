@@ -58,10 +58,11 @@ button {
 
 .topbar {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   gap: 16px;
   padding: 28px 28px 18px;
+  text-align: center;
 }
 
 .eyebrow,
@@ -83,6 +84,7 @@ h2 {
 h1 {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 8px 14px;
   align-items: baseline;
   font-size: clamp(2.4rem, 6vw, 5rem);
@@ -120,6 +122,8 @@ h2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 8px;
+  width: min(520px, 100%);
+  margin: 0 auto;
   padding: 0 28px 24px;
 }
 
@@ -191,20 +195,24 @@ h2 {
 .quiz-head,
 .chart-toolbar {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   gap: 12px;
   padding: 16px 0;
 }
 
 .chart-toolbar {
-  justify-content: space-between;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
 }
 
 .quiz-tools {
   display: flex;
+  justify-content: center;
   align-items: center;
   gap: 8px;
+  width: 100%;
 }
 
 .quiz-type {
@@ -255,6 +263,8 @@ h2 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
+  width: min(640px, 100%);
+  margin: 0 auto;
   padding-top: 18px;
 }
 
@@ -291,6 +301,8 @@ h2 {
   display: grid;
   grid-template-columns: repeat(5, minmax(56px, 1fr));
   gap: 6px;
+  width: min(620px, 100%);
+  margin: 0 auto;
   border-top: 1px solid var(--line);
   padding-top: 14px;
 }
@@ -365,8 +377,9 @@ h2 {
   grid-template-columns: 160px minmax(0, 1fr);
   gap: 18px;
   align-items: center;
+  width: min(620px, 100%);
   border-top: 1px solid var(--line);
-  margin-top: 20px;
+  margin: 20px auto 0;
   padding-top: 20px;
 }
 
