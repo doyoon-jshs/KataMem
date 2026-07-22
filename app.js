@@ -138,6 +138,7 @@ function renderQuiz() {
   const options = useTable ? kana : makeOptions(item, askKana ? "romaji" : "char");
 
   els.quizKana.textContent = askKana ? item.char : `${item.romaji} · ${item.korean}`;
+  els.quizKana.classList.toggle("reading-prompt", !askKana);
   els.answerGrid.classList.toggle("full-chart", useTable);
   els.answerGrid.innerHTML = "";
   state.answered = false;
