@@ -102,7 +102,13 @@ function setMode(mode) {
   els.tabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.mode === mode));
   Object.entries(els.panels).forEach(([name, panel]) => panel.classList.toggle("active", name === mode));
 
-  if (mode === "quiz" && state.quiz.length === 0) startQuiz();
+  if (mode === "quiz") {
+    if (state.quiz.length === 0 || els.answerGrid.children.length === 0) {
+      startQuiz();
+    } else {
+      renderQuiz();
+    }
+  }
   if (mode === "chart") renderChart();
 }
 
@@ -163,9 +169,7 @@ function answerQuiz(button, isCorrect) {
     entry.wrong += 1;
     entry.mastered = false;
     button.classList.add("wrong");
-    els.answerGrid
-      .querySelector(`[data-answer="${CSS.escape(item.char)}"]`)
-      ?.classList.add("correct");
+    findAnswerButton(item.char)?.classList.add("correct");
   }
 
   saveProgress();
@@ -197,6 +201,10 @@ function makeOptions(answer, key) {
 
 function formatReading(item) {
   return `${item.romaji} · ${item.korean}`;
+}
+
+function findAnswerButton(char) {
+  return [...els.answerGrid.children].find((button) => button.dataset.answer === char);
 }
 
 function makeQuizSequence(source, count = 10) {
@@ -237,11 +245,10 @@ function renderChart() {
     if (entry?.mastered) tile.classList.add("mastered");
     if (entry && entry.wrong > entry.correct) tile.classList.add("weak");
     tile.setAttribute("aria-pressed", entry?.mastered ? "true" : "false");
-    tile.setAttribute("aria-label", `${item.char} ${item.romaji} ${entry?.mastered ? "알고 있음" : "아직 표시 안 함"}`);
+    tile.setAttribute("aria-label", `${item.char} ${item.romaji}`);
     tile.innerHTML = `
       <strong>${item.char}</strong>
       <span>${item.romaji}</span>
-      <em>${statusText(entry)}</em>
     `;
     tile.addEventListener("click", () => {
       toggleMastered(item.char);
@@ -279,13 +286,6 @@ function renderStats() {
   els.ring.style.setProperty("--progress", `${percent * 3.6}deg`);
 
   if (state.mode === "chart") renderChart();
-}
-
-function statusText(entry) {
-  if (!entry) return "";
-  if (entry.mastered) return "알고 있음";
-  if (entry.wrong > entry.correct) return "복습 필요";
-  return "";
 }
 
 function shuffle(items) {

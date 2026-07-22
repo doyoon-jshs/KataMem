@@ -308,7 +308,7 @@ h2 {
 
 .kana-tile {
   position: relative;
-  min-height: 68px;
+  min-height: 58px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #fff;
@@ -339,14 +339,6 @@ h2 {
   color: var(--muted);
   font-size: 0.82rem;
   font-weight: 800;
-}
-
-.kana-tile em {
-  min-height: 13px;
-  color: var(--muted);
-  font-size: 0.64rem;
-  font-style: normal;
-  font-weight: 900;
 }
 
 .kana-tile.mastered {
