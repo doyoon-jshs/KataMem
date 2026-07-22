@@ -1,4 +1,4 @@
-const kana = [
+const hiragana = [
   ["あ", "a", "아", "あ행", "입을 편하게 열고 짧게 발음해요."],
   ["い", "i", "이", "あ행", "입꼬리를 살짝 당겨 맑게 소리 내요."],
   ["う", "u", "우", "あ행", "입술을 너무 둥글게 말지 않고 가볍게 소리 내요."],
@@ -47,8 +47,63 @@ const kana = [
   ["ん", "n", "응", "わ행", "받침 ㄴ 또는 ㅇ처럼 끝소리를 만들어요."]
 ].map(([char, romaji, korean, row, hint]) => ({ char, romaji, korean, row, hint }));
 
+const katakana = [
+  ["ア", "a", "아", "ア행", "히라가나 あ와 같은 발음이에요."],
+  ["イ", "i", "이", "ア행", "히라가나 い와 같은 발음이에요."],
+  ["ウ", "u", "우", "ア행", "히라가나 う와 같은 발음이에요."],
+  ["エ", "e", "에", "ア행", "히라가나 え와 같은 발음이에요."],
+  ["オ", "o", "오", "ア행", "히라가나 お와 같은 발음이에요."],
+  ["カ", "ka", "카", "カ행", "히라가나 か와 같은 발음이에요."],
+  ["キ", "ki", "키", "カ행", "히라가나 き와 같은 발음이에요."],
+  ["ク", "ku", "쿠", "カ행", "히라가나 く와 같은 발음이에요."],
+  ["ケ", "ke", "케", "カ행", "히라가나 け와 같은 발음이에요."],
+  ["コ", "ko", "코", "カ행", "히라가나 こ와 같은 발음이에요."],
+  ["サ", "sa", "사", "サ행", "히라가나 さ와 같은 발음이에요."],
+  ["シ", "shi", "시", "サ행", "ツ와 헷갈리기 쉬워요."],
+  ["ス", "su", "스", "サ행", "히라가나 す와 같은 발음이에요."],
+  ["セ", "se", "세", "サ행", "히라가나 せ와 같은 발음이에요."],
+  ["ソ", "so", "소", "サ행", "ン과 헷갈리기 쉬워요."],
+  ["タ", "ta", "타", "タ행", "히라가나 た와 같은 발음이에요."],
+  ["チ", "chi", "치", "タ행", "히라가나 ち와 같은 발음이에요."],
+  ["ツ", "tsu", "츠", "タ행", "シ와 헷갈리기 쉬워요."],
+  ["テ", "te", "테", "タ행", "히라가나 て와 같은 발음이에요."],
+  ["ト", "to", "토", "タ행", "히라가나 と와 같은 발음이에요."],
+  ["ナ", "na", "나", "ナ행", "히라가나 な와 같은 발음이에요."],
+  ["ニ", "ni", "니", "ナ행", "히라가나 に와 같은 발음이에요."],
+  ["ヌ", "nu", "누", "ナ행", "히라가나 ぬ와 같은 발음이에요."],
+  ["ネ", "ne", "네", "ナ행", "히라가나 ね와 같은 발음이에요."],
+  ["ノ", "no", "노", "ナ행", "히라가나 の와 같은 발음이에요."],
+  ["ハ", "ha", "하", "ハ행", "히라가나 は와 같은 발음이에요."],
+  ["ヒ", "hi", "히", "ハ행", "히라가나 ひ와 같은 발음이에요."],
+  ["フ", "fu", "후", "ハ행", "히라가나 ふ와 같은 발음이에요."],
+  ["ヘ", "he", "헤", "ハ행", "히라가나 へ와 같은 발음이에요."],
+  ["ホ", "ho", "호", "ハ행", "히라가나 ほ와 같은 발음이에요."],
+  ["マ", "ma", "마", "マ행", "히라가나 ま와 같은 발음이에요."],
+  ["ミ", "mi", "미", "マ행", "히라가나 み와 같은 발음이에요."],
+  ["ム", "mu", "무", "マ행", "히라가나 む와 같은 발음이에요."],
+  ["メ", "me", "메", "マ행", "히라가나 め와 같은 발음이에요."],
+  ["モ", "mo", "모", "マ행", "히라가나 も와 같은 발음이에요."],
+  ["ヤ", "ya", "야", "ヤ행", "히라가나 や와 같은 발음이에요."],
+  ["ユ", "yu", "유", "ヤ행", "히라가나 ゆ와 같은 발음이에요."],
+  ["ヨ", "yo", "요", "ヤ행", "히라가나 よ와 같은 발음이에요."],
+  ["ラ", "ra", "라", "ラ행", "히라가나 ら와 같은 발음이에요."],
+  ["リ", "ri", "리", "ラ행", "히라가나 り와 같은 발음이에요."],
+  ["ル", "ru", "루", "ラ행", "히라가나 る와 같은 발음이에요."],
+  ["レ", "re", "레", "ラ행", "히라가나 れ와 같은 발음이에요."],
+  ["ロ", "ro", "로", "ラ행", "히라가나 ろ와 같은 발음이에요."],
+  ["ワ", "wa", "와", "ワ행", "히라가나 わ와 같은 발음이에요."],
+  ["ヲ", "wo", "오", "ワ행", "조사로 쓰이고 보통 오처럼 읽어요."],
+  ["ン", "n", "응", "ワ행", "ソ와 헷갈리기 쉬워요."]
+].map(([char, romaji, korean, row, hint]) => ({ char, romaji, korean, row, hint }));
+
+const kanaSets = {
+  hiragana: { title: "ひらがな", items: hiragana },
+  katakana: { title: "カタカナ", items: katakana }
+};
+
 const storageKey = "kanamem-progress-v1";
 const state = {
+  script: "hiragana",
   mode: "chart",
   quizType: "cards",
   quiz: [],
@@ -60,6 +115,8 @@ const state = {
 };
 
 const els = {
+  title: document.querySelector("#app-title span"),
+  scriptButtons: document.querySelectorAll("[data-script]"),
   tabs: document.querySelectorAll(".tab"),
   panels: {
     quiz: document.querySelector("#quiz-panel"),
@@ -79,12 +136,21 @@ const els = {
 
 function loadProgress() {
   const saved = localStorage.getItem(storageKey);
-  if (!saved) return {};
+  if (!saved) return { hiragana: {}, katakana: {} };
 
   try {
-    return JSON.parse(saved);
+    const parsed = JSON.parse(saved);
+
+    if (parsed.hiragana || parsed.katakana) {
+      return {
+        hiragana: parsed.hiragana || {},
+        katakana: parsed.katakana || {}
+      };
+    }
+
+    return { hiragana: parsed, katakana: {} };
   } catch {
-    return {};
+    return { hiragana: {}, katakana: {} };
   }
 }
 
@@ -93,8 +159,8 @@ function saveProgress() {
 }
 
 function entryFor(char) {
-  state.progress[char] ||= { seen: 0, correct: 0, wrong: 0, mastered: false };
-  return state.progress[char];
+  currentProgress()[char] ||= { seen: 0, correct: 0, wrong: 0, mastered: false };
+  return currentProgress()[char];
 }
 
 function setMode(mode) {
@@ -113,17 +179,17 @@ function setMode(mode) {
 }
 
 function weightedKana() {
-  const weak = kana.filter((item) => {
-    const entry = state.progress[item.char];
+  const weak = currentKana().filter((item) => {
+    const entry = currentProgress()[item.char];
     return entry && (entry.wrong > entry.correct || (!entry.mastered && entry.seen > 0));
   });
 
-  const unseen = kana.filter((item) => !state.progress[item.char]);
-  return [...weak, ...weak, ...unseen, ...kana];
+  const unseen = currentKana().filter((item) => !currentProgress()[item.char]);
+  return [...weak, ...weak, ...unseen, ...currentKana()];
 }
 
 function startQuiz(list = weightedKana()) {
-  state.quiz = makeQuizSequence(list.length ? list : kana);
+  state.quiz = makeQuizSequence(list.length ? list : currentKana());
   state.quizIndex = 0;
   state.answered = false;
   state.renderedQuestionIndex = -1;
@@ -135,7 +201,7 @@ function renderQuiz() {
   rememberRenderedQuestion(item);
   const useTable = state.quizType === "table";
   const askKana = useTable ? false : Math.random() > 0.35;
-  const options = useTable ? kana : makeOptions(item, askKana ? "romaji" : "char");
+  const options = useTable ? currentKana() : makeOptions(item, askKana ? "romaji" : "char");
 
   els.quizKana.textContent = askKana ? item.char : `${item.romaji} · ${item.korean}`;
   els.quizKana.classList.toggle("reading-prompt", !askKana);
@@ -189,8 +255,8 @@ function answerQuiz(button, isCorrect) {
 
 function makeOptions(answer, key) {
   const options = [answer];
-  const sameRow = kana.filter((item) => item.row === answer.row && item.char !== answer.char);
-  const others = shuffle([...sameRow, ...kana.filter((item) => item.char !== answer.char)]);
+  const sameRow = currentKana().filter((item) => item.row === answer.row && item.char !== answer.char);
+  const others = shuffle([...sameRow, ...currentKana().filter((item) => item.char !== answer.char)]);
 
   for (const item of others) {
     if (options.length >= 4) break;
@@ -211,12 +277,12 @@ function findAnswerButton(char) {
 function makeQuizSequence(source, count = 10) {
   const sequence = [];
   const tempRecent = [...state.recentQuestions];
-  const pool = source.length ? source : kana;
+  const pool = source.length ? source : currentKana();
 
   while (sequence.length < count) {
     const candidates = pool.filter((item) => !tempRecent.includes(item.char));
-    const fallback = kana.filter((item) => !tempRecent.includes(item.char));
-    const available = candidates.length ? candidates : fallback.length ? fallback : kana;
+    const fallback = currentKana().filter((item) => !tempRecent.includes(item.char));
+    const available = candidates.length ? candidates : fallback.length ? fallback : currentKana();
     const selected = shuffle(available)[0];
 
     sequence.push(selected);
@@ -238,8 +304,8 @@ function rememberRenderedQuestion(item) {
 function renderChart() {
   els.chart.innerHTML = "";
 
-  kana.forEach((item) => {
-    const entry = state.progress[item.char];
+  currentKana().forEach((item) => {
+    const entry = currentProgress()[item.char];
     const tile = document.createElement("button");
     tile.type = "button";
     tile.className = "kana-tile";
@@ -275,12 +341,12 @@ function toggleMastered(char) {
 }
 
 function renderStats() {
-  const entries = kana.map((item) => state.progress[item.char]).filter(Boolean);
+  const entries = currentKana().map((item) => currentProgress()[item.char]).filter(Boolean);
   const mastered = entries.filter((entry) => entry.mastered).length;
   const weak = entries.filter((entry) => entry.wrong > entry.correct).length;
-  const percent = Math.round((mastered / kana.length) * 100);
+  const percent = Math.round((mastered / currentKana().length) * 100);
 
-  els.totalCount.textContent = String(kana.length);
+  els.totalCount.textContent = String(currentKana().length);
   els.masteredCount.textContent = String(mastered);
   els.weakCount.textContent = String(weak);
   els.masteredPercent.textContent = `${percent}%`;
@@ -293,7 +359,31 @@ function shuffle(items) {
   return [...items].sort(() => Math.random() - 0.5);
 }
 
+function currentKana() {
+  return kanaSets[state.script].items;
+}
 
+function currentProgress() {
+  state.progress[state.script] ||= {};
+  return state.progress[state.script];
+}
+
+function setScript(script) {
+  state.script = script;
+  state.quiz = [];
+  state.quizIndex = 0;
+  state.recentQuestions = [];
+  state.renderedQuestionIndex = -1;
+  els.title.textContent = kanaSets[script].title;
+  els.scriptButtons.forEach((button) => button.classList.toggle("active", button.dataset.script === script));
+
+  if (state.mode === "quiz") startQuiz();
+  renderStats();
+}
+
+els.scriptButtons.forEach((button) => {
+  button.addEventListener("click", () => setScript(button.dataset.script));
+});
 els.tabs.forEach((tab) => tab.addEventListener("click", () => setMode(tab.dataset.mode)));
 els.quizTypeButtons.forEach((button) => {
   button.addEventListener("click", () => {
@@ -303,11 +393,11 @@ els.quizTypeButtons.forEach((button) => {
   });
 });
 els.reviewWeak.addEventListener("click", () => {
-  const weak = kana.filter((item) => {
-    const entry = state.progress[item.char];
+  const weak = currentKana().filter((item) => {
+    const entry = currentProgress()[item.char];
     return entry && entry.wrong > entry.correct;
   });
-  startQuiz(weak.length ? weak : kana.slice(0, 10));
+  startQuiz(weak.length ? weak : currentKana().slice(0, 10));
   setMode("quiz");
 });
 renderChart();
