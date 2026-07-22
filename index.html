@@ -5,9 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="짧은 카드 학습과 퀴즈로 히라가나를 외우는 심플한 웹앱"
+      content="히라가나 표와 빠른 퀴즈로 글자별 암기 상태를 표시하는 심플한 웹앱"
     />
     <title>KanaMem - 히라가나 암기</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
     <link rel="icon" href="./assets/kana-icon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
@@ -25,27 +31,9 @@
         </header>
 
         <nav class="mode-tabs" aria-label="학습 모드">
-          <button class="tab active" type="button" data-mode="learn">카드</button>
+          <button class="tab active" type="button" data-mode="chart">표</button>
           <button class="tab" type="button" data-mode="quiz">퀴즈</button>
-          <button class="tab" type="button" data-mode="chart">표</button>
         </nav>
-
-        <section class="mode-panel active" id="learn-panel" aria-live="polite">
-          <div class="study-card">
-            <p class="row-label" id="card-row">あ행</p>
-            <div class="kana-symbol" id="card-kana">あ</div>
-            <div class="reading-line">
-              <strong id="card-romaji">a</strong>
-              <span id="card-korean">아</span>
-            </div>
-            <p class="hint" id="card-hint">입을 편하게 열고 짧게 발음해요.</p>
-          </div>
-          <div class="card-actions">
-            <button class="secondary-button" id="prev-card" type="button">이전</button>
-            <button class="primary-button" id="know-card" type="button">알겠어요</button>
-            <button class="secondary-button" id="next-card" type="button">다음</button>
-          </div>
-        </section>
 
         <section class="mode-panel" id="quiz-panel" aria-live="polite">
           <div class="quiz-head">
@@ -60,9 +48,9 @@
           <p class="feedback" id="quiz-feedback"></p>
         </section>
 
-        <section class="mode-panel" id="chart-panel">
+        <section class="mode-panel active" id="chart-panel">
           <div class="chart-toolbar">
-            <p class="row-label">46자 전체 보기</p>
+            <p class="row-label">아는 글자는 눌러서 표시</p>
             <button class="secondary-button compact" id="review-weak" type="button">헷갈린 글자부터</button>
           </div>
           <div class="kana-chart" id="kana-chart"></div>
@@ -70,31 +58,24 @@
       </section>
 
       <aside class="progress-pane" aria-label="학습 현황">
-        <img src="./assets/kana-icon.svg" alt="" class="brand-mark" />
-        <div>
-          <p class="eyebrow">오늘의 목표</p>
-          <h2>짧게 보고, 바로 맞히기</h2>
-        </div>
+        <p class="eyebrow">진척도</p>
         <div class="progress-ring" aria-label="암기 완료율">
           <span id="mastered-percent">0%</span>
         </div>
         <div class="stats-grid">
           <div>
-            <span id="seen-count">0</span>
-            <p>본 글자</p>
+            <span id="total-count">46</span>
+            <p>전체</p>
           </div>
           <div>
             <span id="mastered-count">0</span>
-            <p>익숙함</p>
+            <p>알고 있음</p>
           </div>
           <div>
             <span id="weak-count">0</span>
             <p>복습 필요</p>
           </div>
         </div>
-        <p class="side-note">
-          틀린 글자는 다음 퀴즈에서 조금 더 자주 나와요. 한 번에 많이 하기보다 3분씩 자주 보는 흐름으로 설계했어요.
-        </p>
       </aside>
     </main>
 

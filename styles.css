@@ -130,7 +130,7 @@ h2 {
 
 .mode-tabs {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 8px;
   padding: 0 28px 24px;
 }
@@ -157,7 +157,6 @@ h2 {
   flex-direction: column;
 }
 
-.study-card,
 .quiz-question {
   display: grid;
   place-items: center;
@@ -171,14 +170,8 @@ h2 {
     linear-gradient(270deg, rgba(211, 154, 40, 0.1), transparent 42%);
 }
 
-.study-card {
-  grid-template-rows: auto auto auto auto;
-  gap: 10px;
-  padding: 32px 16px;
-}
-
 .kana-symbol {
-  font-family: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+  font-family: "Noto Sans JP", sans-serif;
   font-size: clamp(7rem, 20vw, 15rem);
   line-height: 0.95;
   font-weight: 800;
@@ -188,35 +181,11 @@ h2 {
   font-size: clamp(5rem, 18vw, 10rem);
 }
 
-.reading-line {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  font-size: 1.35rem;
-}
-
-.reading-line strong {
-  color: var(--accent-dark);
-}
-
 .hint,
-.feedback,
-.side-note {
+.feedback {
   margin: 0;
   color: var(--muted);
   line-height: 1.65;
-}
-
-.hint {
-  max-width: 420px;
-}
-
-.card-actions {
-  display: grid;
-  grid-template-columns: 1fr 1.4fr 1fr;
-  gap: 10px;
-  padding-top: 22px;
 }
 
 .primary-button {
@@ -300,6 +269,7 @@ h2 {
 }
 
 .kana-tile {
+  position: relative;
   min-height: 78px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -310,8 +280,19 @@ h2 {
   padding: 8px;
 }
 
+.kana-tile::after {
+  content: "";
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--line);
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
 .kana-tile strong {
-  font-family: "Hiragino Sans", "Yu Gothic", "Noto Sans JP", sans-serif;
+  font-family: "Noto Sans JP", sans-serif;
   font-size: 2rem;
   line-height: 1;
 }
@@ -327,15 +308,20 @@ h2 {
   background: rgba(47, 143, 116, 0.1);
 }
 
+.kana-tile.mastered::after {
+  content: "✓";
+  display: grid;
+  place-items: center;
+  border-color: var(--mint);
+  background: var(--mint);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 950;
+}
+
 .kana-tile.weak {
   border-color: rgba(217, 79, 61, 0.45);
   background: rgba(217, 79, 61, 0.08);
-}
-
-.brand-mark {
-  width: 72px;
-  height: 72px;
-  margin-bottom: 20px;
 }
 
 .progress-ring {
@@ -344,7 +330,7 @@ h2 {
   border-radius: 50%;
   display: grid;
   place-items: center;
-  margin: 28px auto;
+  margin: 18px auto 24px;
   background: conic-gradient(var(--mint) var(--progress, 0deg), #edf0ec 0deg);
 }
 
@@ -415,7 +401,6 @@ h2 {
 }
 
 @media (max-width: 460px) {
-  .card-actions,
   .answer-grid {
     grid-template-columns: 1fr;
   }

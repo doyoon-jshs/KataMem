@@ -49,8 +49,7 @@ const kana = [
 
 const storageKey = "kanamem-progress-v1";
 const state = {
-  currentIndex: 0,
-  mode: "learn",
+  mode: "chart",
   quiz: [],
   quizIndex: 0,
   answered: false,
@@ -60,18 +59,9 @@ const state = {
 const els = {
   tabs: document.querySelectorAll(".tab"),
   panels: {
-    learn: document.querySelector("#learn-panel"),
     quiz: document.querySelector("#quiz-panel"),
     chart: document.querySelector("#chart-panel")
   },
-  cardRow: document.querySelector("#card-row"),
-  cardKana: document.querySelector("#card-kana"),
-  cardRomaji: document.querySelector("#card-romaji"),
-  cardKorean: document.querySelector("#card-korean"),
-  cardHint: document.querySelector("#card-hint"),
-  prevCard: document.querySelector("#prev-card"),
-  nextCard: document.querySelector("#next-card"),
-  knowCard: document.querySelector("#know-card"),
   resetProgress: document.querySelector("#reset-progress"),
   quizCount: document.querySelector("#quiz-count"),
   quizKana: document.querySelector("#quiz-kana"),
@@ -82,7 +72,7 @@ const els = {
   reviewWeak: document.querySelector("#review-weak"),
   chart: document.querySelector("#kana-chart"),
   masteredPercent: document.querySelector("#mastered-percent"),
-  seenCount: document.querySelector("#seen-count"),
+  totalCount: document.querySelector("#total-count"),
   masteredCount: document.querySelector("#mastered-count"),
   weakCount: document.querySelector("#weak-count"),
   ring: document.querySelector(".progress-ring")
@@ -108,19 +98,6 @@ function entryFor(char) {
   return state.progress[char];
 }
 
-function renderCard() {
-  const item = kana[state.currentIndex];
-  entryFor(item.char).seen += 1;
-  saveProgress();
-
-  els.cardRow.textContent = item.row;
-  els.cardKana.textContent = item.char;
-  els.cardRomaji.textContent = item.romaji;
-  els.cardKorean.textContent = item.korean;
-  els.cardHint.textContent = item.hint;
-  renderStats();
-}
-
 function setMode(mode) {
   state.mode = mode;
   els.tabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.mode === mode));
@@ -128,20 +105,6 @@ function setMode(mode) {
 
   if (mode === "quiz" && state.quiz.length === 0) startQuiz();
   if (mode === "chart") renderChart();
-}
-
-function moveCard(step) {
-  state.currentIndex = (state.currentIndex + step + kana.length) % kana.length;
-  renderCard();
-}
-
-function markKnown() {
-  const item = kana[state.currentIndex];
-  const entry = entryFor(item.char);
-  entry.correct += 1;
-  entry.mastered = entry.correct >= 3 && entry.correct > entry.wrong;
-  saveProgress();
-  moveCard(1);
 }
 
 function weightedKana() {
@@ -180,6 +143,7 @@ function renderQuiz() {
     button.className = "answer-button";
     button.type = "button";
     button.textContent = askKana ? `${option.romaji} · ${option.korean}` : option.char;
+    button.dataset.answer = option.char;
     button.addEventListener("click", () => answerQuiz(button, option.char === item.char));
     els.answerGrid.append(button);
   });
@@ -202,6 +166,9 @@ function answerQuiz(button, isCorrect) {
     entry.wrong += 1;
     entry.mastered = false;
     button.classList.add("wrong");
+    els.answerGrid
+      .querySelector(`[data-answer="${CSS.escape(item.char)}"]`)
+      ?.classList.add("correct");
     els.quizFeedback.textContent = `${item.char}는 ${item.romaji} · ${item.korean}예요.`;
   }
 
@@ -242,24 +209,39 @@ function renderChart() {
     tile.className = "kana-tile";
     if (entry?.mastered) tile.classList.add("mastered");
     if (entry && entry.wrong > entry.correct) tile.classList.add("weak");
+    tile.setAttribute("aria-pressed", entry?.mastered ? "true" : "false");
+    tile.setAttribute("aria-label", `${item.char} ${item.romaji} ${entry?.mastered ? "알고 있음" : "아직 표시 안 함"}`);
     tile.innerHTML = `<strong>${item.char}</strong><span>${item.romaji}</span>`;
     tile.addEventListener("click", () => {
-      state.currentIndex = kana.findIndex((candidate) => candidate.char === item.char);
-      setMode("learn");
-      renderCard();
+      toggleMastered(item.char);
     });
     els.chart.append(tile);
   });
 }
 
+function toggleMastered(char) {
+  const entry = entryFor(char);
+  entry.seen = Math.max(entry.seen, 1);
+  entry.mastered = !entry.mastered;
+
+  if (entry.mastered) {
+    entry.correct = Math.max(entry.correct, 3);
+    entry.wrong = 0;
+  } else {
+    entry.correct = 0;
+  }
+
+  saveProgress();
+  renderStats();
+}
+
 function renderStats() {
   const entries = kana.map((item) => state.progress[item.char]).filter(Boolean);
-  const seen = entries.filter((entry) => entry.seen > 0).length;
   const mastered = entries.filter((entry) => entry.mastered).length;
   const weak = entries.filter((entry) => entry.wrong > entry.correct).length;
   const percent = Math.round((mastered / kana.length) * 100);
 
-  els.seenCount.textContent = String(seen);
+  els.totalCount.textContent = String(kana.length);
   els.masteredCount.textContent = String(mastered);
   els.weakCount.textContent = String(weak);
   els.masteredPercent.textContent = `${percent}%`;
@@ -273,9 +255,6 @@ function shuffle(items) {
 }
 
 els.tabs.forEach((tab) => tab.addEventListener("click", () => setMode(tab.dataset.mode)));
-els.prevCard.addEventListener("click", () => moveCard(-1));
-els.nextCard.addEventListener("click", () => moveCard(1));
-els.knowCard.addEventListener("click", markKnown);
 els.newQuiz.addEventListener("click", () => startQuiz());
 els.reviewWeak.addEventListener("click", () => {
   const weak = kana.filter((item) => {
@@ -289,9 +268,8 @@ els.resetProgress.addEventListener("click", () => {
   if (!confirm("저장된 진도를 지울까요?")) return;
   state.progress = {};
   saveProgress();
-  renderCard();
   renderStats();
 });
 
-renderCard();
+renderChart();
 renderStats();
