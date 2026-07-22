@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="짧은 카드 학습과 퀴즈로 히라가나를 외우는 심플한 웹앱"
+    />
+    <title>KanaMem - 히라가나 암기</title>
+    <link rel="icon" href="./assets/kana-icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="practice-pane" aria-labelledby="app-title">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">KanaMem</p>
+            <h1 id="app-title">히라가나 암기</h1>
+          </div>
+          <button class="icon-button" id="reset-progress" type="button" aria-label="진도 초기화" title="진도 초기화">
+            ↺
+          </button>
+        </header>
+
+        <nav class="mode-tabs" aria-label="학습 모드">
+          <button class="tab active" type="button" data-mode="learn">카드</button>
+          <button class="tab" type="button" data-mode="quiz">퀴즈</button>
+          <button class="tab" type="button" data-mode="chart">표</button>
+        </nav>
+
+        <section class="mode-panel active" id="learn-panel" aria-live="polite">
+          <div class="study-card">
+            <p class="row-label" id="card-row">あ행</p>
+            <div class="kana-symbol" id="card-kana">あ</div>
+            <div class="reading-line">
+              <strong id="card-romaji">a</strong>
+              <span id="card-korean">아</span>
+            </div>
+            <p class="hint" id="card-hint">입을 편하게 열고 짧게 발음해요.</p>
+          </div>
+          <div class="card-actions">
+            <button class="secondary-button" id="prev-card" type="button">이전</button>
+            <button class="primary-button" id="know-card" type="button">알겠어요</button>
+            <button class="secondary-button" id="next-card" type="button">다음</button>
+          </div>
+        </section>
+
+        <section class="mode-panel" id="quiz-panel" aria-live="polite">
+          <div class="quiz-head">
+            <p class="row-label">문제 <span id="quiz-count">1</span>/10</p>
+            <button class="secondary-button compact" id="new-quiz" type="button">새 퀴즈</button>
+          </div>
+          <div class="quiz-question">
+            <p id="quiz-prompt">이 글자의 발음은?</p>
+            <div class="kana-symbol small" id="quiz-kana">あ</div>
+          </div>
+          <div class="answer-grid" id="answer-grid"></div>
+          <p class="feedback" id="quiz-feedback"></p>
+        </section>
+
+        <section class="mode-panel" id="chart-panel">
+          <div class="chart-toolbar">
+            <p class="row-label">46자 전체 보기</p>
+            <button class="secondary-button compact" id="review-weak" type="button">헷갈린 글자부터</button>
+          </div>
+          <div class="kana-chart" id="kana-chart"></div>
+        </section>
+      </section>
+
+      <aside class="progress-pane" aria-label="학습 현황">
+        <img src="./assets/kana-icon.svg" alt="" class="brand-mark" />
+        <div>
+          <p class="eyebrow">오늘의 목표</p>
+          <h2>짧게 보고, 바로 맞히기</h2>
+        </div>
+        <div class="progress-ring" aria-label="암기 완료율">
+          <span id="mastered-percent">0%</span>
+        </div>
+        <div class="stats-grid">
+          <div>
+            <span id="seen-count">0</span>
+            <p>본 글자</p>
+          </div>
+          <div>
+            <span id="mastered-count">0</span>
+            <p>익숙함</p>
+          </div>
+          <div>
+            <span id="weak-count">0</span>
+            <p>복습 필요</p>
+          </div>
+        </div>
+        <p class="side-note">
+          틀린 글자는 다음 퀴즈에서 조금 더 자주 나와요. 한 번에 많이 하기보다 3분씩 자주 보는 흐름으로 설계했어요.
+        </p>
+      </aside>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>
